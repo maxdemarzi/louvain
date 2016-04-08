@@ -173,8 +173,6 @@ public class Service {
                     step++;
 
                     // Find the best community
-                    // why is best community 0 when i is 0? It should be 1...
-                    // I think the bug is in updateBestCommunity
                     int bestCommunity = updateBestCommunity(i);
                     if ((nodeCommunitiesToCommunities.get(i) != bestCommunity) && (this.communityUpdate)) {
                         moveNodeCommunity(i, bestCommunity);
@@ -188,6 +186,7 @@ public class Service {
                     communityUpdate = false;
                 }
                 someChange = localChange || someChange;
+                System.out.println("Finished INNER LOOP for " + N + "  step " + step + " "+ new java.util.Date());
             }
             if (someChange)
             {
@@ -353,11 +352,20 @@ public class Service {
         double edges = 0;
         for (Long nodeCommunityNode : nodeCommunityNodes)
         {
-            for (Long communityNode : communityNodes)
-            {
-                if (nodeNeighbors.get(nodeCommunityNode).contains(communityNode))
-                {
-                    edges += nodeNeighborsWeights.get(nodeCommunityNode).get(communityNode);
+            HashSet<Long> nodes = nodeNeighbors.get(nodeCommunityNode);
+            HashMap<Long, Double> weights = nodeNeighborsWeights.get(nodeCommunityNode);
+
+            if (nodes.size() <= communityNodes.size()) {
+                for (Long node : nodes) {
+                    if (communityNodes.contains(node)) {
+                        edges += weights.get(node);
+                    }
+                }
+            } else {
+                for (Long communityNode : communityNodes) {
+                    if (nodes.contains(communityNode)) {
+                        edges += weights.get(communityNode);
+                    }
                 }
             }
         }
@@ -373,9 +381,9 @@ public class Service {
                 HashMap<Long, Double> neighborWeights = new HashMap<>();
                 Node provider = providers.next();
                 providerList.add(provider.getId());
-                for (Relationship rel : provider.getRelationships(RelationshipTypes.SHARE_MEMBER, Direction.OUTGOING)) {
-                    neighbors.add(rel.getEndNode().getId());
-                    neighborWeights.put(rel.getEndNode().getId(), (double) rel.getProperty("weight", 0.0D));
+                for (Relationship rel : provider.getRelationships(RelationshipTypes.SHARE_MEMBER, Direction.BOTH)) {
+                    neighbors.add(rel.getOtherNode(provider).getId());
+                    neighborWeights.put(rel.getOtherNode(provider).getId(), (double) rel.getProperty("weight", 0.0D));
                 }
                 nodeNeighbors.put(provider.getId(), neighbors);
                 nodeNeighborsWeights.put(provider.getId(), neighborWeights);
