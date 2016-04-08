@@ -222,8 +222,8 @@ public class Service {
             if (!initCommunities.containsKey(communityId))
             {
                 initCommunities.put(communityId, communityCounter);
-                nodesInCommunity.put(communityCounter, new HashSet<>());
-                nodesInNodeCommunity.put(communityCounter, new HashSet<>());
+                nodesInCommunity.put(communityCounter, new HashSet<Long>());
+                nodesInNodeCommunity.put(communityCounter, new HashSet<Long>());
                 communityCounter++;
             }
             int newCommunityId = initCommunities.get(communityId);

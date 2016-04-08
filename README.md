@@ -14,36 +14,25 @@ This is an unmanaged extension with a Graph Clustering Algorithm on top of Neo4j
 
         mv target/fraud-1.0-SNAPSHOT.jar neo4j/plugins/.
 
-3. Download additional jars to the plugins/ directory of your Neo4j server.
 
-        curl -O http://central.maven.org/maven2/com/google/guava/guava/19.0/guava-19.0.jar
-        mv guava-19.0.jar neo4j/plugins/.
-
-4. Configure Neo4j by adding a line to conf/neo4j-server.properties:
+3. Configure Neo4j by adding a line to conf/neo4j-server.properties:
 
         org.neo4j.server.thirdparty_jaxrs_classes=com.maxdemarzi=/v1
 
-5. Start Neo4j server.
+4. Start Neo4j server.
 
 On the Neo4j Browser:
 
-6. Run the migration (just once):
 
-        :GET /v1/service/migrate
-        
-7. Compute Weights:
-        
-        :POST /v1/service/weights
-        
-8. Warm up the database (optional):
+5. Warm up the database (optional):
 
         :GET /v1/service/warmup    
             
-9. Run the algorithm            
+6. Run the algorithm
 
         :GET /v1/service/louvain_method
         
-10. See all nodes
+7. See all nodes
         
         :GET /v1/service/dump
 
