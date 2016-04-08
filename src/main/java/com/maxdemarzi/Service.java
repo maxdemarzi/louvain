@@ -85,6 +85,10 @@ public class Service {
             try (Transaction tx = db.beginTx()) {
                 Schema schema = db.schema();
                 schema.indexFor(Labels.Provider)
+                        .on("npi")
+                        .create();
+
+                schema.indexFor(Labels.Provider)
                         .on("community")
                         .create();
 
@@ -129,9 +133,9 @@ public class Service {
         providers = getProviders(db);
         // Get the count of Communities in the graph
         N = providers.length;
-        System.out.println("After get Provider Count " + new java.util.Date());
+        System.out.println("After get Provider Count of " + N + " " + new java.util.Date());
         graphWeightSum = weightProviders(db);
-        System.out.println("After gettting weight " + new java.util.Date());
+        System.out.println("After gettting weight of " + graphWeightSum + " " + new java.util.Date());
         communityWeights = new ArrayList<>(N);
         for (int i = 0; i < N; i++)
         {
@@ -153,7 +157,7 @@ public class Service {
         Random rand = new Random();
         boolean someChange = true;
         while (someChange) {
-            System.out.println("In computeModularity OUTER loop******************* " + new java.util.Date());
+            System.out.println("In computeModularity OUTER loop of " + N + "  " + new java.util.Date());
             someChange = false;
             boolean localChange = true;
             while (localChange) {
@@ -162,6 +166,10 @@ public class Service {
 
                 int step = 0;
                 for (int i = start; step < N; i = (i + 1) % N) {
+                    if (step % 1000 == 0) {
+                        System.out.println("In computeModularity INNER loop of " + step + "  " + new java.util.Date());
+                    }
+
                     step++;
 
                     // Find the best community
@@ -183,10 +191,11 @@ public class Service {
             }
             if (someChange)
             {
+                System.out.println("In computeModularity ZOOM OUT of " + N + "  " + new java.util.Date());
                 zoomOut();
             }
         }
-
+        System.out.println("Writing Communities of " + N + "  " + new java.util.Date());
         writeCommunities(db);
 
         return Response.ok().entity(objectMapper.writeValueAsString(results)).build();
