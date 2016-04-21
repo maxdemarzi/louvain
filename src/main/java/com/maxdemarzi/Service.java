@@ -144,10 +144,10 @@ public class Service {
 
         // Initialize
         for (int i = 0; i < providers.length; i++) {
-            HashSet<Long> nodes = new HashSet<>();
-            nodes.add(providers[i]);
-            nodesInCommunity.put(i, nodes);
-            nodesInNodeCommunity.put(i, (HashSet<Long>) nodes.clone());
+            nodesInCommunity.put(i, new HashSet<Long>());
+            nodesInCommunity.get(i).add(providers[i]);
+            nodesInNodeCommunity.put(i, new HashSet<Long>());
+            nodesInNodeCommunity.get(i).add(providers[i]);
             communityForNode.put(providers[i], i);
             nodeCommunityForNode.put(providers[i], i);
             nodeCommunitiesToCommunities.put(i, i);
@@ -186,7 +186,7 @@ public class Service {
                     communityUpdate = false;
                 }
                 someChange = localChange || someChange;
-                System.out.println("Finished INNER LOOP for " + N + "  step " + step + " "+ new java.util.Date());
+                System.out.println("--Finished INNER LOOP for " + N + "  step " + step + " "+ new java.util.Date());
             }
             if (someChange)
             {
