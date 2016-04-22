@@ -377,24 +377,24 @@ public class Service {
     }
 
     private double getEdgesInsideCommunity(Integer nodeCommunity, Integer community) {
-        Set<Long> nodeCommunityNodes = nodesInNodeCommunity.get(nodeCommunity);
-        Set<Long> communityNodes = nodesInCommunity.get(community);
+        //Set<Long> nodeCommunityNodes = nodesInNodeCommunity.get(nodeCommunity);
+        //Set<Long> communityNodes = nodesInCommunity.get(community);
         double edges = 0;
-        for (Long nodeCommunityNode : nodeCommunityNodes)
+        for (Long nodeCommunityNode : nodesInNodeCommunity.get(nodeCommunity))
         {
-            HashSet<Long> nodes = nodeNeighbors.get(nodeCommunityNode);
-            HashMap<Long, Double> weights = nodeNeighborsWeights.get(nodeCommunityNode);
+            //HashSet<Long> nodes = nodeNeighbors.get(nodeCommunityNode);
+            //HashMap<Long, Double> weights = nodeNeighborsWeights.get(nodeCommunityNode);
 
-            if (nodes.size() <= communityNodes.size()) {
-                for (Long node : nodes) {
-                    if (communityNodes.contains(node)) {
-                        edges += weights.get(node);
+            if (nodeNeighbors.get(nodeCommunityNode).size() <= nodesInCommunity.get(community).size()) {
+                for (Long node : nodeNeighbors.get(nodeCommunityNode)) {
+                    if (nodesInCommunity.get(community).contains(node)) {
+                        edges += nodeNeighborsWeights.get(nodeCommunityNode).get(node);
                     }
                 }
             } else {
-                for (Long communityNode : communityNodes) {
-                    if (nodes.contains(communityNode)) {
-                        edges += weights.get(communityNode);
+                for (Long communityNode : nodesInCommunity.get(community)) {
+                    if (nodeNeighbors.get(nodeCommunityNode).contains(communityNode)) {
+                        edges += nodeNeighborsWeights.get(nodeCommunityNode).get(communityNode);
                     }
                 }
             }
