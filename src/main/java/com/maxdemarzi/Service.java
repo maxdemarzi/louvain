@@ -126,6 +126,7 @@ public class Service {
     @GET
     @Path("/louvain_method")
     public Response louvainMethod(@Context GraphDatabaseService db) throws ExecutionException, IOException {
+        System.out.println("Staring Louvain Clustering @ " + new java.util.Date());
         Map<String, String> results = new HashMap<String,String>(){{
             put("louvain method","calculated");
         }};
@@ -192,7 +193,7 @@ public class Service {
             }
         }
         writeCommunities(db);
-
+        System.out.println("Finished Louvain Clustering @ " + new java.util.Date());
         return Response.ok().entity(objectMapper.writeValueAsString(results)).build();
     }
 
