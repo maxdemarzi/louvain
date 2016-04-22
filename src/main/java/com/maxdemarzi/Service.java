@@ -176,7 +176,7 @@ public class Service {
                 int step = 0;
                 for (int i = start; step < N; i = (i + 1) % N) {
                     global++;
-                    if (step % 1000 == 0) {
+                    if (step % 10000 == 0) {
                         System.out.println("In INNER loop. Step: " + step + " i: " + i + " Global: " + global + " @ " + new java.util.Date());
                     }
 
@@ -305,7 +305,7 @@ public class Service {
         int bestCommunity = 0;
         double best = 0;
         // Get Communities Connected To Node Communities
-        Set<Integer> communities = new TreeSet<>();
+        TreeSet<Integer> communities = new TreeSet<>();
         for (long nodeId : nodesInNodeCommunity.get(nodeCommunity)) {
             for (long neighborId : nodeNeighbors.get(nodeId)) {
                 communities.add(communityForNode.get(neighborId));
@@ -317,7 +317,7 @@ public class Service {
 
         for (Integer community : communities) {
             if (nodeCommunity == 0) {
-                System.out.println("looking for qvalue:" + community + " out of " + communities.size());
+                System.out.println("looking for qvalue:" + community + " out of " + communities.size() + " max: " + communities.last());
             }
 
             double qValue = q(nodeCommunity, community);
