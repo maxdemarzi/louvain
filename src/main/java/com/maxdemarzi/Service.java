@@ -28,6 +28,7 @@ public class Service {
     private HashMap<Long, Integer> nodeCommunityForNode = new HashMap<>(); // which node community is a node in
     private HashMap<Integer, Integer> nodeCommunitiesToCommunities = new HashMap<>(); // which communities map to node communities
     private ArrayList<Double> communityWeights;
+    private ArrayList<Double> nodeCommunityWeights;
     private long[] providers;
     private int N;
     private double resolution = 1.0;
@@ -142,6 +143,7 @@ public class Service {
             communityWeights.add(0.0);
         }
 
+
         // Initialize
         for (int i = 0; i < providers.length; i++) {
             nodesInCommunity.put(i, new HashSet<Long>());
@@ -151,7 +153,14 @@ public class Service {
             communityForNode.put(providers[i], i);
             nodeCommunityForNode.put(providers[i], i);
             nodeCommunitiesToCommunities.put(i, i);
+
         }
+
+        nodeCommunityWeights = new ArrayList<>(N);
+        for (int i = 0; i < providers.length; i++) {
+            nodeCommunityWeights.add(i, getNodeCommunityWeight(i));
+        }
+
         System.out.println("After initialization " + new java.util.Date());
 
         Random rand = new Random();
@@ -214,6 +223,7 @@ public class Service {
         int communityCounter = 0;
         nodesInCommunity.clear();
         nodesInNodeCommunity.clear();
+        nodeCommunityWeights = new ArrayList<Double>();
         nodeCommunitiesToCommunities.clear();
 
         for (Long provider : providers) {
@@ -232,6 +242,10 @@ public class Service {
             nodesInCommunity.get(newCommunityId).add(provider);
             nodesInNodeCommunity.get(newCommunityId).add(provider);
 
+        }
+
+        for(Integer communityId : initCommunities.values()) {
+            nodeCommunityWeights.add(getNodeCommunityWeight(communityId));
         }
 
         return communityCounter;
@@ -304,7 +318,7 @@ public class Service {
     private double q(Integer nodeCommunity, Integer community) {
         double edgesInCommunity = getEdgesInsideCommunity(nodeCommunity, community);
         double communityWeight = communityWeights.get(community);
-        double nodeWeight = getNodeCommunityWeight(nodeCommunity);
+        double nodeWeight = nodeCommunityWeights.get(nodeCommunity);//  getNodeCommunityWeight(nodeCommunity);
         double qValue = resolution * edgesInCommunity - (nodeWeight * communityWeight)
                 / (2.0 * graphWeightSum);
         int actualNodeCom = nodeCommunitiesToCommunities.get(nodeCommunity);
