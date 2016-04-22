@@ -305,7 +305,7 @@ public class Service {
         int bestCommunity = 0;
         double best = 0;
         // Get Communities Connected To Node Communities
-        Set<Integer> communities = new HashSet<>();
+        Set<Integer> communities = new TreeSet<>();
         for (long nodeId : nodesInNodeCommunity.get(nodeCommunity)) {
             for (long neighborId : nodeNeighbors.get(nodeId)) {
                 communities.add(communityForNode.get(neighborId));
@@ -317,7 +317,7 @@ public class Service {
 
         for (Integer community : communities) {
             if (nodeCommunity == 0) {
-                System.out.println("looking for qvalue:" + community);
+                System.out.println("looking for qvalue:" + community + " out of " + communities.size());
             }
 
             double qValue = q(nodeCommunity, community);
