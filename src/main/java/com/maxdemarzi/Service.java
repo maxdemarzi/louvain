@@ -180,6 +180,9 @@ public class Service {
                         System.out.println("In INNER loop. Step: " + step + " i: " + i + " Global: " + global + " @ " + new java.util.Date());
                     }
 
+                    if (i == 0) {
+                        System.out.println("i is zero @ " + new java.util.Date());
+                    }
                     step++;
 
                     // Find the best community
@@ -295,6 +298,10 @@ public class Service {
     }
 
     private int updateBestCommunity(Integer nodeCommunity ) {
+        if (nodeCommunity == 0) {
+            System.out.println("updateBestCommunity nodeCommunity is zero @ " + new java.util.Date());
+        }
+
         int bestCommunity = 0;
         double best = 0;
         // Get Communities Connected To Node Communities
@@ -304,7 +311,15 @@ public class Service {
                 communities.add(communityForNode.get(neighborId));
             }
         }
+        if (nodeCommunity == 0) {
+            System.out.println("communities:" + communities.size());
+        }
+
         for (Integer community : communities) {
+            if (nodeCommunity == 0) {
+                System.out.println("looking for qvalue:" + community);
+            }
+
             double qValue = q(nodeCommunity, community);
             if (qValue > best)
             {
