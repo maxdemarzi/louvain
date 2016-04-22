@@ -134,15 +134,12 @@ public class Service {
         providers = getProviders(db);
         // Get the count of Communities in the graph
         N = providers.length;
-        System.out.println("After get Provider Count of " + N + " " + new java.util.Date());
         graphWeightSum = weightProviders(db);
-        System.out.println("After gettting weight of " + graphWeightSum + " " + new java.util.Date());
         communityWeights = new ArrayList<>(N);
         for (int i = 0; i < N; i++)
         {
             communityWeights.add(0.0);
         }
-
 
         // Initialize
         for (int i = 0; i < providers.length; i++) {
@@ -153,7 +150,6 @@ public class Service {
             communityForNode.put(providers[i], i);
             nodeCommunityForNode.put(providers[i], i);
             nodeCommunitiesToCommunities.put(i, i);
-
         }
 
         nodeCommunityWeights = new ArrayList<>(N);
@@ -161,12 +157,9 @@ public class Service {
             nodeCommunityWeights.add(i, getNodeCommunityWeight(i));
         }
 
-        System.out.println("After initialization " + new java.util.Date());
-        Integer global = 0;
         Random rand = new Random();
         boolean someChange = true;
         while (someChange) {
-            System.out.println("In computeModularity OUTER loop of " + N + "  " + new java.util.Date());
             someChange = false;
             boolean localChange = true;
             while (localChange) {
@@ -175,14 +168,7 @@ public class Service {
 
                 int step = 0;
                 for (int i = start; step < N; i = (i + 1) % N) {
-                    global++;
-                    if (step % 10000 == 0) {
-                        System.out.println("In INNER loop. Step: " + step + " i: " + i + " Global: " + global + " @ " + new java.util.Date());
-                    }
 
-                    if (i == 0) {
-                        System.out.println("i is zero @ " + new java.util.Date());
-                    }
                     step++;
 
                     // Find the best community
@@ -199,15 +185,12 @@ public class Service {
                     communityUpdate = false;
                 }
                 someChange = localChange || someChange;
-                System.out.println("--Finished INNER LOOP for " + N + "  step " + step + " "+ new java.util.Date());
             }
             if (someChange)
             {
-                System.out.println("In computeModularity ZOOM OUT of " + N + "  " + new java.util.Date());
                 zoomOut();
             }
         }
-        System.out.println("Writing Communities of " + N + "  " + new java.util.Date());
         writeCommunities(db);
 
         return Response.ok().entity(objectMapper.writeValueAsString(results)).build();
@@ -298,10 +281,6 @@ public class Service {
     }
 
     private int updateBestCommunity(Integer nodeCommunity ) {
-        if (nodeCommunity == 0) {
-            System.out.println("updateBestCommunity nodeCommunity is zero @ " + new java.util.Date());
-        }
-
         int bestCommunity = 0;
         double best = 0;
         // Get Communities Connected To Node Communities
@@ -311,15 +290,8 @@ public class Service {
                 communities.add(communityForNode.get(neighborId));
             }
         }
-        if (nodeCommunity == 0) {
-            System.out.println("communities:" + communities.size());
-        }
 
         for (Integer community : communities) {
-            if (nodeCommunity == 0) {
-                System.out.println("looking for qvalue:" + community + " out of " + communities.size() + " max: " + communities.last());
-            }
-
             double qValue = q(nodeCommunity, community);
             if (qValue > best)
             {
@@ -377,15 +349,11 @@ public class Service {
     }
 
     private double getEdgesInsideCommunity(Integer nodeCommunity, Integer community) {
-        //Set<Long> nodeCommunityNodes = nodesInNodeCommunity.get(nodeCommunity);
-        //Set<Long> communityNodes = nodesInCommunity.get(community);
         double edges = 0;
+        Integer nodesInCommunitySize = nodesInCommunity.get(community).size();
         for (Long nodeCommunityNode : nodesInNodeCommunity.get(nodeCommunity))
         {
-            //HashSet<Long> nodes = nodeNeighbors.get(nodeCommunityNode);
-            //HashMap<Long, Double> weights = nodeNeighborsWeights.get(nodeCommunityNode);
-
-            if (nodeNeighbors.get(nodeCommunityNode).size() <= nodesInCommunity.get(community).size()) {
+            if (nodeNeighbors.get(nodeCommunityNode).size() <= nodesInCommunitySize) {
                 for (Long node : nodeNeighbors.get(nodeCommunityNode)) {
                     if (nodesInCommunity.get(community).contains(node)) {
                         edges += nodeNeighborsWeights.get(nodeCommunityNode).get(node);
