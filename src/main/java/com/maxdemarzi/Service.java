@@ -176,7 +176,7 @@ public class Service {
                 int step = 0;
                 for (int i = start; step < N; i = (i + 1) % N) {
                     if (step % 1000 == 0) {
-                        System.out.println("In computeModularity INNER loop of " + step + "  " + new java.util.Date());
+                        System.out.println("In computeModularity INNER loop of " + step + " for " + N + " @ " + new java.util.Date());
                     }
 
                     step++;
