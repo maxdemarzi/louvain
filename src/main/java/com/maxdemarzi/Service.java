@@ -31,7 +31,7 @@ public class Service {
     private ArrayList<Double> nodeCommunityWeights;
     private long[] providers;
     private int N;
-    private double resolution = 1.0;
+    private double resolution = 99.0;
     private Double graphWeightSum;
     private boolean communityUpdate = false;
 
